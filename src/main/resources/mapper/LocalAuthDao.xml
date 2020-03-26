@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gr.dao.LocalAuthDao">
+    <resultMap id="localAuthMap" type="com.gr.entity.LocalAuth">
+        <id column="local_auth_id" property="localAuthId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_edit_time" property="lastEditTime"/>
+        <association property="personInfo" column="user_id"
+                     javaType="com.gr.entity.PersonInfo">
+            <id column="user_id" property="userId"/>
+            <result column="user_name" property="name"/>
+            <result column="profile_img" property="profileImg"/>
+            <result column="email" property="email"/>
+            <result column="gender" property="gender"/>
+            <result column="enable_status" property="enableStatus"/>
+            <result column="user_type" property="userType"/>
+            <result column="create_time" property="createTime"/>
+            <result column="last_edit_time" property="lastEditTime"/>
+            <result column="integral" property="integral"/>
+        </association>
+    </resultMap>
+    <select id="queryLocalAuthByUserNameAndPwd" resultMap="localAuthMap" parameterType="String">
+            select
+            l.local_auth_id,
+            l.username,
+            l.password,
+            l.last_edit_time,
+            l.create_time,
+            p.user_id,
+            p.email,
+            p.gender,
+            p.user_name,
+            p.profile_Img,
+            p.user_type,
+            p.create_time,
+            p.last_edit_time,
+            p.enable_Status,
+            p.integral
+            from tb_local_auth l
+            left join tb_person_info p
+            on l.user_id=p.user_id
+            where l.username = #{userName}
+            and l.password = #{password}
+        </select>
+
+    <insert id="insertLocalAuth" parameterType="com.gr.entity.LocalAuth">
+        insert into
+        tb_local_auth(username, password, user_id, create_time, last_edit_time)
+        values (#{username},#{password},#{personInfo.userId},#{createTime},#{lastEditTime})
+    </insert>
+</mapper>

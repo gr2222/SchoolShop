@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gr.dao.OrderSummaryDao">
+    <insert id="insertOrderSummary" parameterType="com.gr.entity.OrderSummary">
+INSERT INTO tb_order_summary (shop_id, product_id, order_num,create_time)VALUES ( #{shopId}, #{product.productId}, #{orderNum}, #{createTime});
+</insert>
+    <resultMap id="orderSummaryMap" type="com.gr.entity.OrderSummary">
+        <id column="order_summary_id" property="orderSummaryId"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="create_time" property="createTime"/>
+        <association property="product" column="product_id" javaType="com.gr.entity.Product">
+            <id column="product_id" property="productId"/>
+            <result column="product_name" property="productName"/>
+        </association>
+    </resultMap>
+    <select id="selectOrderSummary" resultMap="orderSummaryMap">
+        select
+        os.shop_id,
+        os.order_num,
+        os.create_time,
+        p.product_id,
+        p.product_name
+        from tb_order_summary os,
+        tb_product p
+        where os.product_id = p.product_id
+        and os.shop_id = #{shopId}
+        and os.create_time = #{date}
+        order by os.product_id
+    </select>
+</mapper>

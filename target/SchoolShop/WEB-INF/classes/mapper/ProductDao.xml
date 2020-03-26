@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gr.dao.ProductDao">
+    <insert id="insertProduct" parameterType="com.gr.entity.Product"
+            useGeneratedKeys="true" keyProperty="productId" keyColumn="product_id">
+       insert into
+       tb_product(
+       product_name,
+       product_desc,
+       img_addr,
+       normal_price,
+       promotion_price,
+       priority,
+       create_time,
+       last_edit_time,
+       enable_status,
+       product_category_id,
+       shop_id,
+       integral
+       ) values(
+       #{productName},
+       #{productDesc},
+       #{imgAddr},
+       #{normalPrice},
+       #{promotionPrice},
+       #{priority},
+       #{createTime},
+       #{lastEditTime},
+       #{enableStatus},
+       #{productCategory.productCategoryId},
+       #{shop.shopId},
+       #{integral}
+       )
+   </insert>
+    <resultMap id="productMap" type="com.gr.entity.Product">
+        <id column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_desc" property="productDesc"/>
+        <result column="img_addr" property="imgAddr"/>
+        <result column="normal_price" property="normalPrice"/>
+        <result column="promotion_price" property="promotionPrice"/>
+        <result column="priority" property="priority"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_edit_time" property="lastEditTime"/>
+        <result column="enable_status" property="enableStatus"/>
+        <result column="integral" property="integral"/>
+        <association property="productCategory"
+                     column="product_category_id"
+                     javaType="com.gr.entity.ProductCategory">
+            <id column="product_category_id" property="productCategoryId"/>
+            <result column="product_category_name" property="productCategoryName"/>
+        </association>
+        <association property="shop" column="shop_id" javaType="com.gr.entity.Shop">
+            <id column="shop_id" property="shopId"/>
+            <result column="shop_name" property="shopName"/>
+        </association>
+    </resultMap>
+    <select id="queryProductById" resultMap="productMap">
+    select
+        p.product_id,
+        p.product_name,
+        p.product_desc,
+        p.img_addr,
+        p.normal_price,
+        p.promotion_price,
+        p.priority,
+        p.create_time,
+        p.last_edit_time,
+        p.enable_status,
+        p.integral,
+        pc.product_category_id,
+        pc.product_category_name,
+        s.shop_id,
+        s.shop_name
+    from tb_product p ,
+    tb_product_category pc,
+    tb_shop s
+    where p.product_category_id = pc.product_category_id
+    and p.shop_id = s.shop_id
+    and p.product_id = #{productId}
+    </select>
+
+    <update id="updateProduct" parameterType="com.gr.entity.Product">
+        update tb_product
+        <set>
+            <if test="productName!=null">product_name=#{productName},</if>
+            <if test="productDesc!=null">product_desc=#{productDesc},</if>
+            <if test="imgAddr!=null">img_addr=#{imgAddr},</if>
+            <if test="normalPrice!=null">normal_price=#{normalPrice},</if>
+            <if test="promotionPrice!=null">promotion_price=#{promotionPrice},</if>
+            <if test="priority!=null">priority=#{priority},</if>
+            <if test="lastEditTime!=null">last_edit_time=#{lastEditTime},</if>
+            <if test="enableStatus!=null">enable_status=#{enableStatus},</if>
+            <if test="productCategory!=null">product_category_id=#{productCategory.productCategoryId},</if>
+            <if test="integral!=null">integral=#{integral},</if>
+        </set>
+        where product_id=#{productId}
+    </update>
+
+    <select id="queryShops" resultMap="productMap">
+        select
+        p.product_id,
+        p.product_name,
+        p.product_desc,
+        p.img_addr,
+        p.normal_price,
+        p.promotion_price,
+        p.priority,
+        p.create_time,
+        p.last_edit_time,
+        p.enable_status,
+        p.integral,
+        pc.product_category_id,
+        pc.product_category_name,
+        s.shop_id,
+        s.shop_name
+        from tb_product p ,
+        tb_product_category pc,
+        tb_shop s
+        <where>
+            p.product_category_id = pc.product_category_id
+            and p.shop_id = s.shop_id
+            <if test="productmsg.productName!=null">
+                and p.product_name like '${productmsg.productName}'
+            </if>
+            <if test="productmsg.enableStatus!=null">
+                and p.enable_status = ${productmsg.enableStatus}
+            </if>
+            <if test="productmsg.productCategory!=null and productmsg.productCategory.productCategoryId!=null">
+                and p.product_category_id = ${productmsg.productCategory.productCategoryId}
+            </if>
+            <if test="productmsg.shop!=null and productmsg.shop.shopId!=null">
+                and p.shop_id = ${productmsg.shop.shopId}
+            </if>
+        </where>
+        order by priority desc
+        limit #{rowIndex},#{pageSize}
+    </select>
+    <select id="queryShopCount" resultType="int">
+        select count(1)
+        from tb_product p
+        <where>
+            <if test="productmsg.productName!=null">
+                and p.product_name like '${productmsg.productName}'
+            </if>
+            <if test="productmsg.enableStatus!=null">
+                and p.enable_status = ${productmsg.enableStatus}
+            </if>
+            <if test="productmsg.productCategory!=null and productmsg.productCategory.productCategoryId!=null">
+                and p.product_category_id = ${productmsg.productCategory.productCategoryId}
+            </if>
+            <if test="productmsg.shop!=null and productmsg.shop.shopId!=null">
+                and p.shop_id = ${productmsg.shop.shopId}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateProductCategoryToNull" parameterType="Long">
+       update tb_product set product_category_id = =null where product_category_id=#{productCategoryId};
+    </update>
+</mapper>

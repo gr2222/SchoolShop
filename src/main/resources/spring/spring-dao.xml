@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+<!--    加载配置文件-->
+    <context:property-placeholder location="classpath:jdbc.perprotis"/>
+
+    <bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+<!--        基本信息-->
+        <property name="driverClass" value="${jdbc.mysql.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.mysql.url}"/>
+        <property name="user" value="${jdbc.mysql.username}"/>
+        <property name="password" value="${jdbc.mysql.password}"/>
+<!--        最大连接数和最小保留连接数-->
+        <property name="maxPoolSize" value="30"/>
+        <property name="minPoolSize" value="10"/>
+        <property name="initialPoolSize" value="10"/>
+<!--        不自动提交-->
+        <property name="autoCommitOnClose" value="false"/>
+<!--        获取连接超时时常-->
+        <property name="checkoutTimeout" value="10000"/>
+<!--        获取连接失败重试次数-->
+        <property name="acquireRetryAttempts" value="2"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
+        <property name="dataSource" ref="datasource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="typeAliasesPackage" value="com.gr.entity"/>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="com.gr.dao"/>
+    </bean>
+</beans>

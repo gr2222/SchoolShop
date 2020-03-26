@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gr.dao.OrderDao">
+    <insert id="insertOrder" parameterType="com.gr.entity.Order"
+            useGeneratedKeys="true" keyProperty="orderId" keyColumn="order_id">
+        insert into
+        tb_order(shop_id, product_id,buyer_id, enable_status,create_time, last_edit_time,normal_price,promotion_price,integral)
+        values (#{shop.shopId},#{product.productId},#{buyer.userId},#{enableStatus},#{createTime},#{lastEditTime},#{normalPrice},#{promotionPrice},#{integral})
+    </insert>
+    <resultMap id="orderMap" type="com.gr.entity.Order">
+        <id column="order_id" property="orderId"/>
+        <result column="enable_status" property="enableStatus"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_edit_time" property="lastEditTime"/>
+        <result column="seller_id" property="sellerId"/>
+        <result column="promotion_price" property="promotionPrice"/>
+        <result column="normal_price"  property="normalPrice"/>
+        <result column="integral" property="integral"/>
+        <result column="orderuuid" property="orderuuid"/>
+        <association property="shop" column="shop_id" javaType="com.gr.entity.Shop">
+            <id column="shop_id" property="shopId"/>
+            <result column="shop_name" property="shopName"/>
+        </association>
+        <association property="product" column="product_id" javaType="com.gr.entity.Product">
+            <id column="product_id" property="productId"/>
+            <result column="product_name" property="productName"/>
+            <result column="img_addr" property="imgAddr"/>
+        </association>
+        <association property="buyer" column="buyer_id" javaType="com.gr.entity.PersonInfo">
+            <id column="user_id" property="userId"/>
+            <result column="user_name" property="name"/>
+            <result column="integral" property="integral"/>
+        </association>
+    </resultMap>
+    <select id="queryOrder" resultMap="orderMap">
+        select
+        o.order_id,
+        o.enable_status,
+        o.create_time,
+        o.last_edit_time,
+        o.seller_id,
+        o.promotion_price,
+        o.normal_price,
+        o.integral,
+        o.orderuuid,
+        pr.product_id,
+        pr.product_name,
+        pr.img_addr,
+        s.shop_id,
+        s.shop_name,
+        pi.user_id,
+        pi.user_name
+        from tb_order o,
+        tb_product pr,
+        tb_shop s,
+        tb_person_info pi
+        <where>
+            o.shop_id=s.shop_id
+            and o.product_id = pr.product_id
+            and o.buyer_id = pi.user_id
+            <if test="order!=null and order.orderId!=null">
+                and o.order_id=#{order.orderId}
+            </if>
+            <if test="order!=null and order.shop!=null and order.shop.shopId!=null">
+                and o.shop_id=#{order.shop.shopId}
+            </if>
+            <if test="order!=null and order.product!=null and order.product.productId!=null">
+                and o.product_id=#{order.product.productId}
+            </if>
+            <if test="order!=null and order.buyer!=null and order.buyer.userId!=null">
+                and o.buyer_id=#{order.buyer.userId}
+            </if>
+            <if test="order!=null and order.lastEditTime!=null">
+                and o.last_edit_time = #{order.lastEditTime}
+            </if>
+            <if test="order!=null and order.enableStatus!=null">
+                and o.enable_status=#{order.enableStatus}
+            </if>
+        </where>
+        order by last_edit_time DESC
+        limit #{rowIndex},#{pageSize}
+    </select>
+    <select id="queryOrderCount" resultType="int">
+        select count(1)
+        from tb_order o,
+        tb_product pr,
+        tb_shop s,
+        tb_person_info pi
+        <where>
+            o.shop_id=s.shop_id
+            and o.product_id = pr.product_id
+            and o.buyer_id = pi.user_id
+            <if test="order!=null and order.orderId!=null">
+                and o.order_id=#{order.orderId}
+            </if>
+            <if test="order!=null and order.shop!=null and order.shop.shopId!=null">
+                and o.shop_id=#{order.shop.shopId}
+            </if>
+            <if test="order!=null and order.product!=null and order.product.productId!=null">
+                and o.product_id=#{order.product.productId}
+            </if>
+            <if test="order!=null and order.buyer!=null and order.buyer.userId!=null">
+                and o.buyer_id=#{order.buyer.userId}
+            </if>
+            <if test="order!=null and order.enableStatus!=null">
+                and o.enable_status=#{order.enableStatus}
+            </if>
+            <if test="order!=null and order.lastEditTime!=null">
+                and o.last_edit_time=#{order.lastEditTime}
+            </if>
+        </where>
+    </select>
+    <update id="updateOrder" parameterType="com.gr.entity.Order">
+        update tb_order
+        <set>
+            <if test="enableStatus!=null">
+                enable_status = #{enableStatus},
+            </if>
+            <if test="orderuuid!=null">
+                orderuuid = #{orderuuid},
+            </if>
+            last_edit_time = #{lastEditTime}
+        </set>
+        where order_id=#{orderId}
+    </update>
+</mapper>
