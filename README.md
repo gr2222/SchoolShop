@@ -34,4 +34,16 @@
 6. 访问http://localhost:8080/SchoolShop/reception/index
 
 ## 功能展示：
+- 用户模块
+![image-20200326110252591](https://github.com/gr2222/image/blob/master/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C.png)
+- 前端展示
+![image-20200326110252591](https://github.com/gr2222/image/blob/master/%E9%A6%96%E9%A1%B5.png)
+![image-20200326110252591](https://github.com/gr2222/image/blob/master/%E5%95%86%E5%BA%97%E9%A1%B5%E9%9D%A2.png)
+- 商铺管理
+![image-20200326110252591](https://github.com/gr2222/image/blob/master/QQ20200326-112359%402x.png)
+![image-20200326110252591](https://github.com/gr2222/image/blob/master/QQ20200326-112410%402x.png)
+![image-20200326110252591](https://github.com/gr2222/image/blob/master/QQ20200326-112421%402x.png)
+![image-20200326110252591](https://github.com/gr2222/image/blob/master/QQ20200326-112513%402x.png)
+![image-20200326110252591](https://github.com/gr2222/image/blob/master/QQ20200326-112444%402x.png)
+
 
