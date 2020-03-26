@@ -28,8 +28,8 @@
 
 1. 打开src/main/resources/jdbc.perprotis 修改 MySQL 信息，修改 redis信息。
 2. 创建数据库schoolshop 运行src/main/resources/schoolshop.sql。
-3. 将src/main/resources/image.zip 解压到电脑任意目录下，修改src/main/Java/com/gr/util/PathUtil.java 按照不同操作系统将解压后的image 目录填入。
-4. 在tomcat中将image目录下的item设置项目目录。![image-20200326110252591](https://github.com/gr2222/image/blob/master/QQ20200326-111644%402x.png)
+3. 将src/main/resources/image.zip 解压到电脑任意目录下，修改src/main/Java/com/gr/util/PathUtil.java 按照不同操作系统将解压后的image 目录填入。![image-20200326110252591](https://github.com/gr2222/image/blob/master/QQ20200326-111644%402x.png)
+4. 在tomcat中将image目录下的item设置项目目录。
 5. 启动tomcat
 6. 访问http://localhost:8080/SchoolShop/reception/index
 
