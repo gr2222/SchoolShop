@@ -21,7 +21,7 @@ public class PathUtil {
         if (property.toLowerCase().startsWith(OS)){
             basePath = "D/schoolShop/image";
         }else {
-            basePath = "/usr/local/image";
+            basePath = "/Users/gaorui/Downloads/image";
             //  /usr/local/image
             //  /Users/gaorui/Downloads/image
         }

@@ -1,5 +1,4 @@
 $(function () {
-    alert("有默认值，直接点击登录即可");
     var registerurl = '/SchoolShop/user/loginUser';
    $("#submit").click(function () {
        var username = $("#loginname").val();
